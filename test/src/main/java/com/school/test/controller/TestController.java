@@ -3,8 +3,6 @@ package com.school.test.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.security.auth.login.AccountNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,25 +10,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.school.test.entity.Student;
-import com.school.test.service.StudentService;
+import com.school.test.entity.Test;
+import com.school.test.service.TestService;
 
 @RestController
 @RequestMapping("/api/v1")
-public class StudentController {
+public class TestController {
 	
 	@Autowired
-	StudentService studentservice;
-   
-	@PostMapping("/student")
-	public Map<String,String> addStudent(@RequestBody Student student) throws AccountNotFoundException
+	TestService testservice;
+
+	@PostMapping("/test")
+	public Map<String,String> addTest(@RequestBody Test test)
 	{
-		return this.studentservice.addStudent(student);
+		return this.testservice.addTest(test);
 	}
-	
-	@GetMapping("/student")
-	public List<Student> retrieveStudent()
+	@GetMapping("/test")
+	public List<Test> retrieveTest()
 	{
-		return this.studentservice.retrieveStudent();
+		return this.testservice.retrieveTest();
 	}
 }

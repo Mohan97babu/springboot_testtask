@@ -1,6 +1,5 @@
 package com.school.test.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,9 +12,7 @@ public class School {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO,generator="sequenceGenerator")
 	private long id;
-	@Column(name="name")
 	private String name;
-	@Column(name="address")
 	private String address;
 
 	public long getId() {

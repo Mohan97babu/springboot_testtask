@@ -1,5 +1,9 @@
 package com.school.test.service;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +18,20 @@ public class StudentService {
    
 	@Autowired
 	private StudentRepository studentrespository;
-	
-	@Autowired
-	private SchoolRepository Schoolrepo;
 
 	
-	
-	public Student addStudent(final Student student) throws AccountNotFoundException
+	public Map<String,String> addStudent(final Student student) throws AccountNotFoundException
 	{
-		boolean check = Schoolrepo.existsBySchoolName(student.getSchoolName());
-		if(!check)
-		{
-			throw new AccountNotFoundException("School not Found");
-		}
-		return this.studentrespository.save(student);
+		Map<String,String> response = new LinkedHashMap<>();
+		Student savedStudent = this.studentrespository.save(student);
+		response.put("id", savedStudent.getId()+"");
+		response.put("schoolId", savedStudent.getSchool().getId()+"");
+		response.put("message","Student is added successfully");
+		return response;
+	}
+	
+	public List<Student> retrieveStudent()
+	{
+		return this.studentrespository.findAll();
 	}
 }
