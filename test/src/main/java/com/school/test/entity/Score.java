@@ -6,21 +6,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+
 public class Score {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO,generator="sequenceGenerator")
   private long id;
   @Column(name="score")
   private long score;
-  @OneToOne
-  @JoinColumn(name="student_id")
+  @ManyToOne
+  @JoinColumn(name="student_id",nullable=false)
   private Student student;
-  @OneToOne
-  @JoinColumn(name="test_id")
+  @ManyToOne
+  @JoinColumn(name="test_id",nullable=false)
   private Test test;
 
 public long getId() {

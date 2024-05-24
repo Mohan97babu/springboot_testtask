@@ -81,64 +81,55 @@ import com.school.test.entity.Test;
 import com.school.test.repository.ChoiceRepository;
 import com.school.test.repository.ScoreRepository;
 import com.school.test.repository.StudentAnswerRepository;
-import com.school.test.repository.StudentRepository;
-import com.school.test.repository.TestRepository;
 
 @Service
 public class StudentAnswerService {
 
-    @Autowired
-    private StudentAnswerRepository studentAnswerRepository;
+	@Autowired
+	private StudentAnswerRepository studentAnswerRepository;
 
-    @Autowired
-    private ChoiceRepository choiceRepository;
+	@Autowired
+	private ChoiceRepository choiceRepository;
 
-    @Autowired
-    private ScoreRepository scoreRepository;
+	@Autowired
+	private ScoreRepository scoreRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
+	public Map<String, String> addStudentAnswer(final StudentAnswer studentAnswer) {
+		Map<String, String> response = new LinkedHashMap<>();
 
-    @Autowired
-    private TestRepository testRepository;
+		Optional<Choice> choiceOptional = choiceRepository.findById(studentAnswer.getChoice().getId());
 
-    public Map<String, String> addStudentAnswer(final StudentAnswer studentAnswer) {
-        Map<String, String> response = new LinkedHashMap<>();
+		if (choiceOptional.isPresent()) {
+			Choice existingChoice = choiceOptional.get();
 
-        Optional<Choice> choiceOptional = choiceRepository.findById(studentAnswer.getChoice().getId());
+			if (existingChoice.getIsCorrect() == 1) {
+				Student student = studentAnswer.getStudent();
+				Test test = studentAnswer.getTest();
 
-        if (choiceOptional.isPresent()) {
-            Choice existingChoice = choiceOptional.get();
+				Optional<Score> scoreOptional = scoreRepository.findByStudentAndTest(student, test);
 
-            if (existingChoice.getIsCorrect() == 1) {
-                // Fetch or create the score for the student and test
-                Student student = studentAnswer.getStudent();
-                Test test = studentAnswer.getTest(); // Get test from payload
+				Score score;
+				if (scoreOptional.isPresent()) {
+					score = scoreOptional.get();
+					score.setScore(score.getScore() + 1);
+				} else {
+					score = new Score();
+					score.setStudent(student);
+					score.setTest(test);
+					score.setScore(1); // Initialize score
+				}
 
-                Optional<Score> scoreOptional = scoreRepository.findByStudentAndTest(student, test);
+				scoreRepository.save(score);
+				response.put("message", "Score updated successfully.");
+			} else {
+				response.put("message", "The choice is incorrect, no score updated.");
+			}
 
-                Score score;
-                if (scoreOptional.isPresent()) {
-                    score = scoreOptional.get();
-                    score.setScore(score.getScore() + 1);
-                } else {
-                    score = new Score();
-                    score.setStudent(student);
-                    score.setTest(test);
-                    score.setScore(1); // Initialize score
-                }
-                
-                scoreRepository.save(score);
-                response.put("message", "Score updated successfully.");
-            } else {
-                response.put("message", "The choice is incorrect, no score updated.");
-            }
-            
-            studentAnswerRepository.save(studentAnswer);
-        } else {
-            response.put("error", "Choice not found.");
-        }
+			studentAnswerRepository.save(studentAnswer);
+		} else {
+			response.put("error", "Choice not found.");
+		}
 
-        return response;
-    }
+		return response;
+	}
 }
