@@ -11,32 +11,39 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Question {
 
-      @Id	
-      @GeneratedValue(strategy=GenerationType.AUTO,generator="sequenceGenerator")
-	  private long id;
-      @Column(name="question")
-	  private String question;
-      
-      @ManyToOne
-      @JoinColumn(name="test_id")
-      private Test test;
+  @Id	
+  @GeneratedValue(strategy=GenerationType.AUTO,generator="sequenceGenerator")
+  private long id;
+  
+  @Column(name="question")
+  private String question;
+  
+  @ManyToOne
+  @JoinColumn(name="test_id")
+  private Test test;
             
-	public Test getTest() {
+  public Test getTest() 
+  {
 		return test;
-	}
-	public void setTest(Test test) {
+  }
+  public void setTest(Test test) 
+  {
 		this.test = test;
-	}
-	public long getId() {
+  }
+  public long getId() 
+  {
 		return id;
-	}
-	public void setId(long id) {
+  }
+  public void setId(long id) 
+  {
 		this.id = id;
-	}
-	public String getQuestion() {
+  }
+  public String getQuestion() 
+  {
 		return question;
-	}
-	public void setQuestion(String question) {
+  }
+  public void setQuestion(String question) 
+  {
 		this.question = question;
-	}
+  }
 }

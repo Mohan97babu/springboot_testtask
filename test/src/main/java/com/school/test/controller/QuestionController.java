@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.test.dto.ResponsePostDTO;
 import com.school.test.entity.Question;
 
 import com.school.test.service.QuestionService;
@@ -24,7 +25,7 @@ public class QuestionController {
 	QuestionService questionservice;
 	
 	@PostMapping("/question")
-   public Map<String,String> addQuestion(@RequestBody Question question)
+   public ResponsePostDTO addQuestion(@RequestBody Question question)
    {
 	   return this.questionservice.addQuestion(question);
    }

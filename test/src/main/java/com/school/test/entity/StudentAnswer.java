@@ -29,8 +29,19 @@ public class StudentAnswer {
     @ManyToOne
     @JoinColumn(name = "test_id")
     private Test test;
+    
+    @ManyToOne
+    @JoinColumn(name="question_id")
+    private Question question;
 
-    // Getters and setters
+    public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
     public long getId() {
         return id;
     }

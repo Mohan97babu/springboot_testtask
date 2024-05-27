@@ -25,6 +25,7 @@ public class TestController {
 	{
 		return this.testservice.addTest(test);
 	}
+	
 	@GetMapping("/test")
 	public List<Test> retrieveTest()
 	{

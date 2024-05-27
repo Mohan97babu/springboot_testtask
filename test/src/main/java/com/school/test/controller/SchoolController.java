@@ -20,11 +20,13 @@ public class SchoolController {
 	
 	@Autowired
 	SchoolService schoolservice;
+	
 	@PostMapping("/school")
-   public School createSchool(@RequestBody School school)
-   {
+    public School createSchool(@RequestBody School school)
+    {
 	   return this.schoolservice.createSchool(school);
-   }
+    }
+	
 	@GetMapping("/school")
 	public List<School> retrieveSchool()
 	{

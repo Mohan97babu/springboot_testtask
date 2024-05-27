@@ -23,6 +23,10 @@ public class Choice {
 	@Column(name="is_correct",nullable=false)
 	private long isCorrect;
 	
+	@ManyToOne
+	@JoinColumn(name="question_id")
+	private Question question;
+	
 	public long getIsCorrect() {
 		return isCorrect;
 	}
@@ -31,10 +35,6 @@ public class Choice {
 		this.isCorrect = isCorrect;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="question_id")
-	private Question question;
-	
 	public Question getQuestion() {
 		return question;
 	}
@@ -58,8 +58,5 @@ public class Choice {
 	public void setChoice(String choice) {
 		this.choice = choice;
 	}
-
-	
-
 	
 }

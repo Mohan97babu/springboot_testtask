@@ -7,4 +7,5 @@ import com.school.test.entity.School;
 
 @Repository
 public interface SchoolRepository extends JpaRepository<School,Long>{
+	
 }

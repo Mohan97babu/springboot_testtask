@@ -10,13 +10,16 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Test {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO,generator="sequenceGenerator")
-   private long id;
+    private long id;
+	
 	@Column
-   private String testName;
+    private String testName;
+	
 	@Column
-   private String testDate;
+    private String testDate;
 	
 	@ManyToOne
 	@JoinColumn(name="tutor_id")
@@ -45,7 +48,5 @@ public class Test {
 	}
 	public void setTestDate(String testDate) {
 		this.testDate = testDate;
-	}
-	   
-   
+	}  
 }

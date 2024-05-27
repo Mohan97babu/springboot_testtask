@@ -18,6 +18,7 @@ public class SchoolService {
 	{
 		return this.schoolrepository.save(school);
 	}
+	
 	public List<School> retrieveSchool()
 	{
 		return this.schoolrepository.findAll();

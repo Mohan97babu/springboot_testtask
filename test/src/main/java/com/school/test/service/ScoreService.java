@@ -25,18 +25,14 @@ public class ScoreService {
 	@Autowired
 	ChoiceRepository choicerepository;
 	
-	public Map<String,String> addScore(final Score score)
-	{
-		Map<String,String> response = new LinkedHashMap<>();
-		this.scorerepository.save(score);
-		response.put("id", score.getId()+"");
-//		response.put("tutorId",score.getTest().getId()+"");
-	    response.put("message", "score added successfully");
-		return response;
-	}
 	
 	public List<Score> retrieveScore()
 	{
 		return this.scorerepository.findAll();	
+	}
+	
+	public List<Score> retrieveStudentScores(Long id)
+	{
+		return this.scorerepository.findByStudentId(id);
 	}
 }

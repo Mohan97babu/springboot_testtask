@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,16 +20,22 @@ public class ScoreController {
 
 	@Autowired
 	ScoreService scoreservice;
-	
-	@PostMapping("/score")
-	public Map<String,String> addScore(@RequestBody Score score )
-	{
-		return this.scoreservice.addScore(score);
-	}
-	
+//	
+//	@PostMapping("/score")
+//	public Map<String,String> addScore(@RequestBody Score score )
+//	{
+//		return this.scoreservice.addScore(score);
+//	}
+//	
 	@GetMapping("/score")
 	public List<Score> retrieveScore()
 	{
 		return this.scoreservice.retrieveScore();
+	}
+	
+	@GetMapping("/score/{id}")
+	public List<Score> retrieveStudentScores(@PathVariable Long id)
+	{
+		return this.scoreservice.retrieveStudentScores(id);
 	}
 }
