@@ -12,7 +12,7 @@ import com.school.test.repository.SchoolRepository;
 public class SchoolService {
 
 	@Autowired
-	SchoolRepository schoolrepository;
+	private SchoolRepository schoolrepository;
 	
 	public School createSchool(final School school)
 	{

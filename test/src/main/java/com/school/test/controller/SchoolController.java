@@ -19,7 +19,7 @@ import com.school.test.service.SchoolService;
 public class SchoolController {
 	
 	@Autowired
-	SchoolService schoolservice;
+	private SchoolService schoolservice;
 	
 	@PostMapping("/school")
     public School createSchool(@RequestBody School school)

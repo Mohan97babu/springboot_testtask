@@ -1,6 +1,5 @@
 package com.school.test.controller;
 
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.test.dto.ResponsePostDTO;
 import com.school.test.entity.StudentAnswer;
 import com.school.test.service.StudentAnswerService;
 
@@ -16,10 +16,10 @@ import com.school.test.service.StudentAnswerService;
 public class StudentAnswerController {
 	
 	@Autowired
-	StudentAnswerService studentanswerservice;
+	private StudentAnswerService studentanswerservice;
 	
 	@PostMapping("/student-answer")
-	public Map<String,String> addStudentAnswer(@RequestBody StudentAnswer studentanswer)
+	public ResponsePostDTO addStudentAnswer(@RequestBody StudentAnswer studentanswer)
 	{
 		return this.studentanswerservice.addStudentAnswer(studentanswer);
 	}

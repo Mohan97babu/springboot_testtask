@@ -1,7 +1,6 @@
 package com.school.test.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ public class QuestionController {
 	
 	
 	@Autowired
-	QuestionService questionservice;
+	private QuestionService questionservice;
 	
 	@PostMapping("/question")
    public ResponsePostDTO addQuestion(@RequestBody Question question)

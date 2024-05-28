@@ -1,7 +1,6 @@
 package com.school.test.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,7 @@ import com.school.test.service.ChoiceService;
 public class ChoiceController {
 
 	@Autowired
-	ChoiceService choiceservice;
+	private ChoiceService choiceservice;
 	
 	@PostMapping("/choice")
    public ResponsePostDTO addChoice(@RequestBody Choice choice)

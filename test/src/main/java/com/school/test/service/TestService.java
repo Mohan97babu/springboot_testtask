@@ -1,12 +1,15 @@
 package com.school.test.service;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.school.test.dto.ResponsePostDTO;
+import com.school.test.dto.ResponseTestDTO;
 import com.school.test.entity.Test;
 import com.school.test.repository.TestRepository;
 
@@ -14,19 +17,32 @@ import com.school.test.repository.TestRepository;
 public class TestService {
 
 	@Autowired
-	TestRepository testRepo;
+	private TestRepository testRepo;
 	
-	public Map<String,String> addTest(final Test test)
+	public ResponsePostDTO addTest(final Test test)
 	{
-		Map<String,String> response = new LinkedHashMap<>();
+
 		this.testRepo.save(test);
-		response.put("id", test.getId()+"");
-	    response.put("message", "test added successfully");
+
+	    ResponsePostDTO response = new ResponsePostDTO();
+		response.setId(test.getId());
+		response.setMessage("Test is added successfully");
 		return response;
 	}
 	
-	public List<Test> retrieveTest()
+	public List<ResponseTestDTO> retrieveTest()
 	{
-		return this.testRepo.findAll();	
+		List<Test> data = this.testRepo.findAll();
+		List<ResponseTestDTO> resList = new ArrayList<>();
+		for(Test test:data)
+		{
+			ResponseTestDTO temp = new ResponseTestDTO();
+			temp.setId(test.getId());
+			temp.setTestDate(test.getTestDate());
+			temp.setTestName(test.getTestName());
+			resList.add(temp);
+		}
+		return resList;
+		
 	}
 }
