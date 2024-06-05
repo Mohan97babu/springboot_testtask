@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.test.dto.PaginatedResponseDTO;
 import com.school.test.dto.ResponsePostDTO;
 import com.school.test.entity.Score;
 import com.school.test.entity.Tutor;
@@ -30,9 +32,9 @@ public class TutorController {
 	}
 	
 	@GetMapping("/tutor")
-	public List<Tutor> retrieveTutor()
+	public PaginatedResponseDTO<Tutor> retrieveTutor(@RequestParam int page,@RequestParam int size)
 	{
-		return this.tutorservice.retrieveTutor();
+		return this.tutorservice.retrieveTutor(page,size);
 	}
 	
 	 @GetMapping("/tutors/scores/{tutorId}")

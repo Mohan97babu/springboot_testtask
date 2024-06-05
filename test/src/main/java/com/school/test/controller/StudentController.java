@@ -6,12 +6,16 @@ import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.test.dto.PaginatedResponseDTO;
 import com.school.test.dto.ResponsePostDTO;
+import com.school.test.dto.SearchRequestDTO;
 import com.school.test.entity.Student;
 import com.school.test.service.StudentService;
 
@@ -29,8 +33,13 @@ public class StudentController {
 	}
 	
 	@GetMapping("/student")
-	public List<Student> retrieveStudent()
+	public PaginatedResponseDTO<Student> retrieveStudent(@RequestParam int page,@RequestParam int size)
 	{
-		return this.studentservice.retrieveStudent();
+		return this.studentservice.retrieveStudent(page,size);
+	}
+	@GetMapping("/student/search")
+	public PaginatedResponseDTO<Student> searchStudents(@ModelAttribute SearchRequestDTO request)
+	{
+		return this.studentservice.searchStudents(request);
 	}
 }

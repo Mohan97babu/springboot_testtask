@@ -1,10 +1,15 @@
 package com.school.test.service;
 
-import java.util.List;
 
+
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.school.test.dto.PaginatedRequestDTO;
+import com.school.test.dto.PaginatedResponseDTO;
+import com.school.test.dto.SearchRequestDTO;
 import com.school.test.entity.School;
 import com.school.test.repository.SchoolRepository;
 
@@ -19,8 +24,52 @@ public class SchoolService {
 		return this.schoolrepository.save(school);
 	}
 	
-	public List<School> retrieveSchool()
-	{
-		return this.schoolrepository.findAll();
-	}
+//	public List<School> retrieveSchool()
+//	{
+//		return this.schoolrepository.findAll();
+//	}
+//	
+		public PaginatedResponseDTO<School> getSchools(PaginatedRequestDTO request) {
+	        Page<School> schoolPage = schoolrepository.findAll(PageRequest.of(request.getPage(), request.getSize()));
+
+	        PaginatedResponseDTO<School> response = new PaginatedResponseDTO<>();
+	        response.setData(schoolPage.getContent());
+	        response.setPageNumber(schoolPage.getNumber());
+	        response.setPageSize(schoolPage.getSize());
+	        response.setTotalElements(schoolPage.getTotalElements());
+	        response.setTotalPages(schoolPage.getTotalPages());
+
+	        return response;
+	    }
+	public PaginatedResponseDTO<School> searchSchools(SearchRequestDTO searchRequest) {
+        Page<School> schoolPage = schoolrepository.searchSchools(
+            searchRequest.getName(), 
+            searchRequest.getAddress(), 
+            searchRequest.getId(), 
+            PageRequest.of(searchRequest.getPage(), searchRequest.getSize())
+        );
+
+        PaginatedResponseDTO<School> response = new PaginatedResponseDTO<>();
+        response.setData(schoolPage.getContent());
+        response.setPageNumber(schoolPage.getNumber());
+        response.setPageSize(schoolPage.getSize());
+        response.setTotalElements(schoolPage.getTotalElements());
+        response.setTotalPages(schoolPage.getTotalPages());
+
+        return response;
+    }
+//		public PaginatedResponseDTO<School> getSchoolsWithName(PaginatedRequestDTO request) {
+//	        Page<School> schoolPage = schoolrepository.findByNameContainingIgnoreCase(request.getName(),PageRequest.of(request.getPage(), request.getSize()));
+//
+//	        PaginatedResponseDTO<School> response = new PaginatedResponseDTO<>();
+//	        response.setData(schoolPage.getContent());
+//	        response.setPageNumber(schoolPage.getNumber());
+//	        response.setPageSize(schoolPage.getSize());
+//	        response.setTotalElements(schoolPage.getTotalElements());
+//	        response.setTotalPages(schoolPage.getTotalPages());
+//
+//	        return response;
+//	    }
+	  
+	
 }

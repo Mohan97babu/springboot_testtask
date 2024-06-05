@@ -30,7 +30,7 @@ public class ChoiceController {
 	   return this.choiceservice.addChoice(choice);
    }
 	
-	@GetMapping("question/choice/{id}")
+	@GetMapping("/question/choice/{id}")
 	public List<ResponseDTO> retrieveChoice(@PathVariable long id){
 		return this.choiceservice.retrieveChoice(id);	
 	} 
