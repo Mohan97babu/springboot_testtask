@@ -3,8 +3,10 @@ package com.school.test.service;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.school.test.dto.PaginatedRequestDTO;
@@ -70,6 +72,24 @@ public class SchoolService {
 //
 //	        return response;
 //	    }
+	 public PaginatedResponseDTO<School> searchSchoolsWithOrder(SearchRequestDTO searchRequest, Sort sort) {
+	        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), sort);
+	        Page<School> schoolPage = schoolrepository.searchSchools(
+	            searchRequest.getName(),
+	            searchRequest.getAddress(),
+	            searchRequest.getId(),
+	            pageable
+	        );
+
+	        PaginatedResponseDTO<School> response = new PaginatedResponseDTO<>();
+	        response.setData(schoolPage.getContent());
+	        response.setPageNumber(schoolPage.getNumber());
+	        response.setPageSize(schoolPage.getSize());
+	        response.setTotalElements(schoolPage.getTotalElements());
+	        response.setTotalPages(schoolPage.getTotalPages());
+
+	        return response;
+	    }
 	  
 	
 }

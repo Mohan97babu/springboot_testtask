@@ -1,13 +1,15 @@
 package com.school.test.service;
 
 
-import java.util.List;
+
 
 import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.school.test.dto.PaginatedResponseDTO;
@@ -61,4 +63,23 @@ public class StudentService {
 		response.setPageSize(studentPage.getSize());
 		return response;
 	}
+	
+	public PaginatedResponseDTO<Student> searchStudentsWithSort(SearchRequestDTO request,Sort sort)
+	{
+		Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+		Page<Student> studentPage = studentrespository.searchStudents(
+				request.getFirstName(),
+				request.getLastName(),
+				request.getId(),
+				pageable);
+		
+		PaginatedResponseDTO<Student> response = new PaginatedResponseDTO<>();
+		response.setData(studentPage.getContent());
+		response.setPageNumber(studentPage.getNumber());
+		response.setTotalElements(studentPage.getTotalElements());
+		response.setTotalPages(studentPage.getTotalPages());
+		response.setPageSize(studentPage.getSize());
+		return response;
+	}
+	
 }

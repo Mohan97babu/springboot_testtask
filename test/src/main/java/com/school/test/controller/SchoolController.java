@@ -3,6 +3,7 @@ package com.school.test.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,5 +50,23 @@ public class SchoolController {
 	    public PaginatedResponseDTO<School> searchSchools(@ModelAttribute SearchRequestDTO searchRequest) {
 	        return schoolservice.searchSchools(searchRequest);
 	    }
-	
-}
+//	 @GetMapping("/schools/search")
+//	    public PaginatedResponseDTO<School> searchSchoolsWithOrder(@ModelAttribute SearchRequestDTO searchRequest,Sort sort) {
+//	        return schoolservice.searchSchoolsWithOrder(searchRequest,sort);
+//	    }
+	 @GetMapping("/schools/search/sort")
+	  public PaginatedResponseDTO<School> searchSchoolsWithOrder(@ModelAttribute SearchRequestDTO searchRequestWithOrder, Sort sort) {
+
+//	    System.out.println(searchRequestWithOrder.getSortOrder().toString().getClass());
+	    if (searchRequestWithOrder.getSortField() == null || searchRequestWithOrder.getSortOrder() == null) {
+	      sort = Sort.by(Sort.Direction.ASC, "name");
+	    } else {
+	        if (searchRequestWithOrder.getSortOrder().toString().equals("DESC")) {
+	          sort = Sort.by( Sort.Direction.DESC,searchRequestWithOrder.getSortField());
+	        } else {
+	          sort = Sort.by(Sort.Direction.ASC,searchRequestWithOrder.getSortField());
+	        }
+	    }
+
+	    return schoolservice.searchSchoolsWithOrder(searchRequestWithOrder, sort);
+	  }}

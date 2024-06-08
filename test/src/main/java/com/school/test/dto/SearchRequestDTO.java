@@ -1,5 +1,7 @@
 package com.school.test.dto;
 
+import org.springframework.data.domain.Sort;
+
 public class SearchRequestDTO {
     private String name;
     private String address;
@@ -8,10 +10,28 @@ public class SearchRequestDTO {
     private int size;
     private String firstName;
     private String lastName;
+    private String sortField;
+    private Sort.Direction sortOrder;
     
 
     
-    public String getFirstName() {
+    public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	public Sort.Direction getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(Sort.Direction sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	public String getFirstName() {
 		return firstName;
 	}
 
