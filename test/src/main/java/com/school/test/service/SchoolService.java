@@ -49,6 +49,7 @@ public class SchoolService {
             searchRequest.getAddress(), 
             searchRequest.getId(), 
             PageRequest.of(searchRequest.getPage(), searchRequest.getSize())
+           
         );
 
         PaginatedResponseDTO<School> response = new PaginatedResponseDTO<>();
