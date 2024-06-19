@@ -4,6 +4,7 @@ package com.school.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +38,7 @@ public class SchoolController {
 //		return this.schoolservice.retrieveSchool();
 //	}
 	@GetMapping("/school")
+	@PreAuthorize("hasRole('ADMIN')")
 	public PaginatedResponseDTO<School> retrieveSchool(PaginatedRequestDTO request)
 	{
 		return this.schoolservice.getSchools(request);
@@ -47,6 +49,7 @@ public class SchoolController {
 //		return this.schoolservice.getSchoolsWithName(request);
 //	}
 	 @GetMapping("/schools/search")
+//	 @PreAuthorize("hasRole('MOD')")
 	    public PaginatedResponseDTO<School> searchSchools(@ModelAttribute SearchRequestDTO searchRequest) {
 	        return schoolservice.searchSchools(searchRequest);
 	    }

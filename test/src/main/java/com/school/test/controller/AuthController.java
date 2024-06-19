@@ -58,7 +58,7 @@ public class AuthController {
   JwtUtils jwtUtils;
 
   @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public UserInfoResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
    
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -69,16 +69,25 @@ public class AuthController {
 
 //    System.out.println(userDetails);
     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-    System.out.println(jwtCookie);
-    List<String> roles = userDetails.getAuthorities().stream()
-        .map(item -> item.getAuthority())
-        .collect(Collectors.toList());
+    
+    String cookie = jwtCookie.toString();
+    int equalsIndex = cookie.indexOf("=");
+    int semiColonIndex = cookie.indexOf(";");
+    String token = cookie.substring(equalsIndex+1, semiColonIndex);
+    
+//    List<String> roles = userDetails.getAuthorities().stream()
+//        .map(item -> item.getAuthority())
+//        .collect(Collectors.toList());
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-        .body(new UserInfoResponse(userDetails.getId(),
-                                   userDetails.getUsername(),
-                                   userDetails.getEmail(),
-                                   roles));
+//    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+//        .body(new UserInfoResponse(userDetails.getId(),
+//                                   userDetails.getUsername(),
+//                                   userDetails.getEmail(),
+//                                   
+//                                   roles));
+    UserInfoResponse authResponse = new UserInfoResponse(token);
+    return authResponse;
+    
   }
 
   @PostMapping("/signup")
@@ -111,14 +120,14 @@ public class AuthController {
           Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
           roles.add(adminRole);
-          System.out.println(roles);
+          
           break;
         case "mod":
 
           Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
           roles.add(modRole);
-          System.out.println(roles);
+          
 
           break;
         default:

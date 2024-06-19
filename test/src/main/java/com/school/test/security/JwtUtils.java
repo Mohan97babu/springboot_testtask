@@ -22,13 +22,13 @@ public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
   
-//  @Value("${school.app.jwtSecret}")
+  @Value("${school.app.jwtSecret}")
   private String jwtSecret;
 
-//  @Value("${school.app.jwtExpirationMs}")
+  @Value("${school.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
-//  @Value("${school.app.jwtCookieName}")
+  @Value("${school.app.jwtCookieName}")
   private String jwtCookie;	
 
   public String getJwtFromCookies(HttpServletRequest request) {
