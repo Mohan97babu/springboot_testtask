@@ -8,13 +8,24 @@ public class UserInfoResponse {
 //	private String email;
 //	private List<String> roles;
 	private String accessToken;
+	private String refreshtoken;
 
-	public UserInfoResponse(String token) {
+	public String getRefreshtoken() {
+		return refreshtoken;
+	}
+
+	public void setRefreshtoken(String refreshtoken) {
+		this.refreshtoken = refreshtoken;
+	}
+
+	public UserInfoResponse(String accesstoken,String refreshtoken) {
 //		this.id = id;
 //		this.username = username;
 //		this.email = email;
 //		this.roles = roles;
-		this.accessToken =token;
+		this.accessToken =accesstoken;
+		this.refreshtoken=refreshtoken;
+		
 	}
 
 	public String getAccessToken() {

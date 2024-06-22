@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +36,7 @@ import com.school.test.repository.RoleRepository;
 import com.school.test.repository.UserRepository;
 import com.school.test.security.JwtUtils;
 import com.school.test.security.UserDetailsImpl;
+import com.school.test.security.UserDetailsServiceImpl;
 
 
 
@@ -56,39 +60,27 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+  
+  @Autowired
+  UserDetailsServiceImpl userDetailsService;
 
   @PostMapping("/signin")
-  public UserInfoResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-   
-    Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-//    System.out.println(authentication);
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+  public UserInfoResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+      Authentication authentication = authenticationManager
+              .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-//    System.out.println(userDetails);
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-    
-    String cookie = jwtCookie.toString();
-    int equalsIndex = cookie.indexOf("=");
-    int semiColonIndex = cookie.indexOf(";");
-    String token = cookie.substring(equalsIndex+1, semiColonIndex);
-    
-//    List<String> roles = userDetails.getAuthorities().stream()
-//        .map(item -> item.getAuthority())
-//        .collect(Collectors.toList());
+      String accessToken = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
+      String refreshToken = jwtUtils.generateRefreshToken(userDetails.getUsername());
 
-//    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-//        .body(new UserInfoResponse(userDetails.getId(),
-//                                   userDetails.getUsername(),
-//                                   userDetails.getEmail(),
-//                                   
-//                                   roles));
-    UserInfoResponse authResponse = new UserInfoResponse(token);
-    return authResponse;
-    
+      ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+      response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+      return new UserInfoResponse(accessToken, refreshToken);
   }
+
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -142,6 +134,37 @@ public class AuthController {
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+  }
+  
+  @PostMapping("/refresh-token")
+  public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+      try {
+          String refreshToken = jwtUtils.getJwtFromCookies(request);
+          System.out.println(refreshToken + "oldrefreshtoken");
+          
+          if (refreshToken != null && jwtUtils.validateJwtToken(refreshToken)) {
+              String username = jwtUtils.getUserNameFromJwtToken(refreshToken);
+              UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
+              
+              // Generate new tokens
+              String newAccessToken = jwtUtils.generateTokenFromUsername(username);
+              ResponseCookie newJwtCookie = jwtUtils.generateJwtCookie(userDetails);
+              response.setHeader(HttpHeaders.SET_COOKIE, newJwtCookie.toString());
+              
+              String newRefreshToken = jwtUtils.generateRefreshToken(username);
+              ResponseCookie newRefreshTokenCookie = jwtUtils.generateRefreshTokenCookie(newRefreshToken);
+              response.addHeader(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString());
+              
+              System.out.println(newAccessToken + newRefreshToken + "");
+              
+              // Return the new tokens
+              return ResponseEntity.ok().body(new UserInfoResponse(newAccessToken, newRefreshToken));
+          } else {
+              return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid refresh token"));
+          }
+      } catch (Exception e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error: Could not process refresh token"));
+      }
   }
 
   @PostMapping("/signout")
